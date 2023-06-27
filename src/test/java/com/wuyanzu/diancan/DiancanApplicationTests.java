@@ -10,4 +10,6 @@ class DiancanApplicationTests {
 	void contextLoads() {
 	}
 
+	//哈哈
+
 }
