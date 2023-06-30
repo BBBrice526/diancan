@@ -32,6 +32,7 @@ CREATE TABLE `employee` (
   `sex` varchar(2) DEFAULT NULL,
   `role` varchar(5) DEFAULT NULL,
   `idnum` varchar(18) NOT NULL,
+  `estatus` tinyint(2) DEFAULT NULL DEFAULT '0',
   PRIMARY KEY (`eid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

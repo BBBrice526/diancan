@@ -22,4 +22,6 @@ public class Employee {
 
     @NotNull(message = "请输入员工身份证号")
     private String idnum;      //身份证号
+
+    private boolean estatus;   //在职状态标识
 }
