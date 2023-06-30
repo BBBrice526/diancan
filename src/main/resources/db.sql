@@ -171,7 +171,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `uid` int(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
-  `phone` varchar(11) NOT NULL,
+  `phone` varchar(11) DEFAULT NULL,
   `gender` varchar(2) DEFAULT NULL,
   `openid` varchar(100) DEFAULT NULL,
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

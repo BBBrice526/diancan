@@ -12,7 +12,6 @@ public class User {
     @NotNull(message = "用户名不能为空")
     private String username;        //用户名
 
-    @NotNull(message = "电话号码不能为空")
     private String phone;       //用户电话
 
     private String gender;      //性别
