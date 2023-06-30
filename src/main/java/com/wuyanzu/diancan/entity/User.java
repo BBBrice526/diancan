@@ -1,15 +1,17 @@
 package com.wuyanzu.diancan.entity;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.sql.Timestamp;
 
 @Data
 public class User {
+    @TableId
     private Long uid;       //用户id
 
-    @NotNull(message = "用户名不能为空")
+    @NotBlank(message = "用户名不能为空")
     private String username;        //用户名
 
     private String phone;       //用户电话

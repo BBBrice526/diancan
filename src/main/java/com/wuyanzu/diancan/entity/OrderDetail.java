@@ -1,10 +1,13 @@
 package com.wuyanzu.diancan.entity;
 
-import jakarta.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
+
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 @Data
 public class OrderDetail {
+    @TableId
     private Long odid;          //商品id
 
     @NotNull(message = "请输入所属订单")

@@ -1,12 +1,16 @@
 package com.wuyanzu.diancan.entity;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 @Data
 public class Food {
+    @TableId
     private Integer fid;        //菜品编号
 
     @Size(max = 20,message = "菜名长度0-20！")
@@ -22,7 +26,7 @@ public class Food {
 
     private boolean fstatus;     //在售标识
 
-    @NotNull(message = "请输入菜品种类")
+    @NotBlank(message = "请输入菜品种类")
     private String ftype;       //菜品种类
 
     private boolean noteat;     //忌口标识

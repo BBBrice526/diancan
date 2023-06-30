@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wuyanzu.diancan.entity.User;
 import com.wuyanzu.diancan.service.UserService;
 import com.wuyanzu.diancan.utils.Result;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,4 +35,6 @@ public class UserController {
         session.setAttribute("user",user1.getUid());
         return Result.success(200,"登录成功",user1);
     }
+
+
 }

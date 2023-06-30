@@ -6,12 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.Employee;
 import com.wuyanzu.diancan.service.EmployeeService;
 import com.wuyanzu.diancan.utils.Result;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 @Slf4j
 @RestController
@@ -70,8 +71,17 @@ public class EmployeeController {
     @PostMapping("/update")
     public Result update(@RequestBody Employee employee){
         log.info(employee.toString());
+        String pw = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
+        employee.setPassword(pw);
         employeeService.updateById(employee);
         return Result.success(200,"更新成功",null);
+    }
+
+    @PostMapping("/resetpw")
+    public Result resetPassword(@RequestParam Long eid,@RequestParam String pw){
+        Employee employee = employeeService.getById(eid);
+        employee.setPassword(DigestUtils.md5DigestAsHex(pw.getBytes()));
+        return Result.success(200,"密码已修改",pw);
     }
 
     @GetMapping("/{eid}")

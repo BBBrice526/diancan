@@ -92,7 +92,7 @@ CREATE TABLE `order` (
   `ostatus` tinyint(8) NOT NULL DEFAULT '0',
   `uid` int(20) DEFAULT NULL,
   `createtime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `oprice` decimal(10,2) NOT NULL,
+  `oprice` decimal(10,2) DEFAULT NULL,
   `tnum` int(20) DEFAULT NULL,
   `remark` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`oid`)
