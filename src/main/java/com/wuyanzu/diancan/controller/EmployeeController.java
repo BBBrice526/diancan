@@ -1,17 +1,17 @@
 package com.wuyanzu.diancan.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.Employee;
 import com.wuyanzu.diancan.service.EmployeeService;
 import com.wuyanzu.diancan.utils.Result;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -41,4 +41,46 @@ public class EmployeeController {
         return Result.success(200,"登录成功",employee1);
     }
 
+    @PostMapping("/logout")
+    public Result logout(HttpSession session){
+        session.removeAttribute("eid");
+        return Result.success(200,"登出成功",null);
+    }
+
+    @PostMapping("/adding")
+    public Result adding(@RequestBody @Valid Employee employee){
+        log.info("员工信息：{}",employee.toString());
+
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+        employeeService.save(employee);
+        return Result.success(200,"添加成功",null);
+    }
+
+    @GetMapping("/page")
+    public Result page(int page,int pageSize,String name){
+        log.info("page={},pagesize={},name={}",page,pageSize,name);
+        Page pageInfo = new Page(page,pageSize);
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
+        queryWrapper.orderByDesc(Employee::getEid);
+        employeeService.page(pageInfo,queryWrapper);
+        return Result.success(200,"查询成功",pageInfo);
+    }
+
+    @PostMapping("/update")
+    public Result update(@RequestBody Employee employee){
+        log.info(employee.toString());
+        employeeService.updateById(employee);
+        return Result.success(200,"更新成功",null);
+    }
+
+    @GetMapping("/{eid}")
+    public Result getByEid(@PathVariable Long eid){
+        log.info("根据工号查询");
+        Employee employee = employeeService.getById(eid);
+        if(employee != null){
+            return  Result.success(200,"员工信息",employee);
+        }
+        return Result.error(201,"该工号员工不存在");
+    }
 }

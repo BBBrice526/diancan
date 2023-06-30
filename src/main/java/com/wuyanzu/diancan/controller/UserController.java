@@ -22,13 +22,14 @@ public class UserController {
     @PostMapping("/login")
     public Result login (@RequestBody User user, HttpSession session){
         String opid = user.getOpenid();
-        String username = user.getUsername();
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getOpenid,opid);
         User user1 = userService.getOne(queryWrapper);
         if(user1 == null){
             user1 = new User();
-            user1.setUsername(username);
+            user1.setOpenid(opid);
+            user1.setUsername(user.getUsername());
+            user1.setGender(user.getGender());
             userService.save(user1);
         }
         session.setAttribute("user",user1.getUid());

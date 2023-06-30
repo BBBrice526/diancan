@@ -1,6 +1,7 @@
 package com.wuyanzu.diancan.entity;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -20,7 +21,7 @@ public class Employee {
 
     private String role;        //角色
 
-    @NotNull(message = "请输入员工身份证号")
+    @Size(max = 18,min = 18,message = "输入十八位身份证号")
     private String idnum;      //身份证号
 
     private boolean estatus;   //在职状态标识
