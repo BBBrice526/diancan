@@ -2,11 +2,13 @@ package com.wuyanzu.diancan.entity;
 
 import javax.validation.constraints.NotBlank;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.sql.Timestamp;
 
 @Data
+@TableName("user")
 public class User {
     @TableId
     private Long uid;       //用户id

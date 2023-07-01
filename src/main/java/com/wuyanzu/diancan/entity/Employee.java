@@ -3,11 +3,12 @@ package com.wuyanzu.diancan.entity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
+@TableName("employee")
 public class Employee {
     @TableId
     @NotNull(message = "请设置员工工号")

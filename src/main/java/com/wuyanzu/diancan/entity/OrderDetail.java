@@ -3,9 +3,11 @@ package com.wuyanzu.diancan.entity;
 import javax.validation.constraints.NotNull;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
+@TableName("order_detail")
 public class OrderDetail {
     @TableId
     private Long odid;          //商品id
