@@ -28,10 +28,12 @@ public class FoodController {
     @Autowired
     private FoodMapper foodMapper;
 
+    private String path = "C:/Users/BricePC/Desktop/diancan/src/main/resources/static/image";
+
+
     @PostMapping("/save")
     public Result save(@RequestParam(name = "file") MultipartFile file, @RequestBody @Valid Food food, BindingResult bindingResult) throws IOException {
         if(!file.isEmpty()){
-            String path = "C:/Users/BricePC/Desktop/diancan/src/main/resources/static/image";
             String filename = file.getOriginalFilename();
             File filepath = new File(path, filename);
             if (!filepath.getParentFile().exists()) {
@@ -53,7 +55,6 @@ public class FoodController {
 //    @PostMapping("/test")
 //    public Result uploadImage(@RequestParam MultipartFile file) throws IOException {
 //        if(!file.isEmpty()){
-//            String path = "C:/Users/BricePC/Desktop/diancan/src/main/resources/static/image";
 //            String filename = file.getOriginalFilename();
 //            File filepath = new File(path, filename);
 //            if (!filepath.getParentFile().exists()) {
