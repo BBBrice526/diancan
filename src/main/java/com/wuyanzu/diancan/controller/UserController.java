@@ -7,10 +7,9 @@ import com.wuyanzu.diancan.utils.Result;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.Serializable;
 
 @Slf4j
 @RestController
@@ -32,13 +31,15 @@ public class UserController {
             user1.setGender(user.getGender());
             userService.save(user1);
         }
-        session.setAttribute("user",user1.getUid());
+        session.setAttribute("uid",user1.getUid());
         return Result.success(200,"登录成功",user1);
     }
 
-    public void getUser(){}
-
-    public void page(){}
+    @GetMapping
+    public Result getUser(HttpSession session){                 //获得session内用户,不确定能用
+        User user = userService.getById((Long)session.getAttribute("uid"));
+        return Result.success(200,"当前用户信息",user);
+    }
 
 
 }
