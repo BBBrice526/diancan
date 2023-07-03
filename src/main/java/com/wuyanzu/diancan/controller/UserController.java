@@ -20,12 +20,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public Result login (@RequestBody User user, HttpSession session){
+    public Result login (@RequestBody User user, HttpSession session){   //用户授权登录，用openid识别用户
         String opid = user.getOpenid();
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getOpenid,opid);
         User user1 = userService.getOne(queryWrapper);
-        if(user1 == null){
+        if(user1 == null){                                  //若用户不存在则新增用户
             user1 = new User();
             user1.setOpenid(opid);
             user1.setUsername(user.getUsername());
@@ -35,6 +35,10 @@ public class UserController {
         session.setAttribute("user",user1.getUid());
         return Result.success(200,"登录成功",user1);
     }
+
+    public void getUser(){}
+
+    public void page(){}
 
 
 }

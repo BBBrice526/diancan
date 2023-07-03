@@ -28,10 +28,10 @@ public class FoodController {
     @Autowired
     private FoodMapper foodMapper;
 
-    @PostMapping
+    @PostMapping("/save")
     public Result save(@RequestParam(name = "file") MultipartFile file, @RequestBody @Valid Food food, BindingResult bindingResult) throws IOException {
         if(!file.isEmpty()){
-            String path = "D/src/main/resources/static/image";
+            String path = "C:/Users/BricePC/Desktop/diancan/src/main/resources/static/image";
             String filename = file.getOriginalFilename();
             File filepath = new File(path, filename);
             if (!filepath.getParentFile().exists()) {
@@ -49,6 +49,22 @@ public class FoodController {
             return Result.error(201,"请上传菜品图片");
         }
     }
+
+//    @PostMapping("/test")
+//    public Result uploadImage(@RequestParam MultipartFile file) throws IOException {
+//        if(!file.isEmpty()){
+//            String path = "C:/Users/BricePC/Desktop/diancan/src/main/resources/static/image";
+//            String filename = file.getOriginalFilename();
+//            File filepath = new File(path, filename);
+//            if (!filepath.getParentFile().exists()) {
+//                filepath.getParentFile().mkdirs();
+//            }
+//            file.transferTo(new File(path + File.separator + filename));
+//            return Result.success(200,"菜品新增成功",filepath.getAbsolutePath());
+//        }else {
+//            return Result.error(201,"请上传菜品图片");
+//        }
+//    }
 
     @GetMapping("/getftype")
     public Result getFtype(){
@@ -92,8 +108,8 @@ public class FoodController {
         }
     }
 
-    @RequestMapping("/{fid}")
-    public Result getByFid(@PathVariable Integer fid){
+    @RequestMapping("/get")
+    public Result getByFid(@RequestParam Integer fid){
         Food food = foodService.getById(fid);
         return Result.success(200,"查找成功 ",food);
     }
