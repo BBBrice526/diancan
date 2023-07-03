@@ -9,6 +9,7 @@ import com.wuyanzu.diancan.service.FoodService;
 import javax.validation.Valid;
 
 import com.wuyanzu.diancan.utils.Result;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -31,6 +32,7 @@ public class FoodController {
     private String path = "C:/Users/BricePC/Desktop/diancan/src/main/resources/static/image";
 
 
+    @ApiOperation("新增菜品")
     @PostMapping("/save")
     public Result save(@RequestParam(name = "file") MultipartFile file, @RequestBody @Valid Food food, BindingResult bindingResult) throws IOException {
         if(!file.isEmpty()){
@@ -67,6 +69,7 @@ public class FoodController {
 //        }
 //    }
 
+    @ApiOperation("得到所有菜品种类")
     @GetMapping("/getftype")
     public Result getFtype(){
         LambdaQueryWrapper<Food> queryWrapper = new LambdaQueryWrapper<>();
@@ -80,6 +83,7 @@ public class FoodController {
         return Result.success(200,"",typeList);
     }
 
+    @ApiOperation("根据菜品种类排序后得到所有菜品信息")
     @GetMapping("/pageforftype")
     public Result pageForFtype(){
         Page<Food> foodPage = new Page<>();
@@ -94,6 +98,7 @@ public class FoodController {
         }
     }
 
+    @ApiOperation("根据菜品种类获得该种类菜品信息")
     @GetMapping("/pagebyftype")
     public Result pageByFtype(@RequestParam String ftype){
         Page<Food> foodPage = new Page<>();
@@ -109,12 +114,14 @@ public class FoodController {
         }
     }
 
+    @ApiOperation("根据fid查找")
     @RequestMapping("/get")
     public Result getByFid(@RequestParam Integer fid){
         Food food = foodService.getById(fid);
         return Result.success(200,"查找成功 ",food);
     }
 
+    @ApiOperation("更新菜品信息")
     @PostMapping("/update")
     public Result update(@RequestParam(name = "file") MultipartFile file,@RequestBody @Valid Food food,BindingResult bindingResult) throws IOException {
         String path = "D/src/main/resources/static/image";
@@ -133,6 +140,7 @@ public class FoodController {
         return Result.success(200,"更新成功",filepath.getAbsolutePath());
     }
 
+    @ApiOperation("只修改菜品状态")
     @PostMapping("/fstatus")
     public Result updateFstatus(@RequestParam boolean fstatus,@RequestParam Integer fid){
         Food food = foodService.getById(fid);

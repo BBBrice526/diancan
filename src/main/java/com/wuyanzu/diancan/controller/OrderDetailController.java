@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.OrderDetail;
 import com.wuyanzu.diancan.service.OrderDetailService;
 import com.wuyanzu.diancan.utils.Result;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ public class OrderDetailController {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    @ApiOperation("添加商品到订单")
     @PostMapping("/add")
     public Result add(@RequestBody OrderDetail orderDetail){
         //log.info("商品信息:{}",orderDetail);
@@ -36,6 +38,7 @@ public class OrderDetailController {
         return Result.success(200,"商品加到订单",orderDetail1);
     }
 
+    @ApiOperation("获得订单下所有商品")
     @GetMapping("/get")
     public Result getDetails(@RequestParam Long oid){
         Page<OrderDetail> odpage = new Page<>();
@@ -45,6 +48,7 @@ public class OrderDetailController {
         return Result.success(200,"该订单商品有",odpage);
     }
 
+    @ApiOperation("减少商品")
     @PostMapping("/remove")
     public Result remove(@RequestBody OrderDetail orderDetail){
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();              // 查询当前菜品是否在订单中，未上菜状态
