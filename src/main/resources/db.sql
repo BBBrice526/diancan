@@ -62,7 +62,6 @@ CREATE TABLE `food` (
   `fprice` decimal(10,2) NOT NULL,
   `fstatus` tinyint(2) NOT NULL DEFAULT '1',
   `ftype` varchar(20) NOT NULL,
-  `noteat` tinyint(4) DEFAULT '0',
   `hot` tinyint(4) DEFAULT '0',
   `sweet` tinyint(4) DEFAULT '0',
   `temp` tinyint(4) DEFAULT '0',
@@ -76,7 +75,7 @@ CREATE TABLE `food` (
 
 LOCK TABLES `food` WRITE;
 /*!40000 ALTER TABLE `food` DISABLE KEYS */;
-INSERT INTO `food` VALUES (200,'干炒牛河',NULL,'很多油',114.51,1,'粉',0,1,0,0),(201,'白粥',NULL,'很少米',4.00,1,'粥',0,0,0,1),(202,'湿炒牛河',NULL,'超级多油',15.00,1,'粉',0,1,0,0),(203,'榨菜',NULL,'超级下粥',0.50,0,'配菜',0,0,0,0),(204,'油焖大虾',NULL,'听说很好吃',45.90,1,'硬菜',1,0,0,0),(205,'葱烧海参',NULL,'不喜欢吃葱的别点',59.50,1,'硬菜',1,0,0,0);
+INSERT INTO `food` VALUES (200,'干炒牛河',NULL,'很多油',114.51,1,'粉',1,0,0),(201,'白粥',NULL,'很少米',4.00,1,'粥',0,0,1),(202,'湿炒牛河',NULL,'超级多油',15.00,1,'粉',1,0,0),(203,'榨菜',NULL,'超级下粥',0.50,0,'配菜',0,0,0),(204,'油焖大虾',NULL,'听说很好吃',45.90,1,'硬菜',0,0,0),(205,'葱烧海参',NULL,'不喜欢吃葱的别点',59.50,1,'硬菜',0,0,0);
 /*!40000 ALTER TABLE `food` ENABLE KEYS */;
 UNLOCK TABLES;
 
