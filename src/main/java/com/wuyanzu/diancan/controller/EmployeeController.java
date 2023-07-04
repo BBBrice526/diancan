@@ -67,12 +67,11 @@ public class EmployeeController {
 
     @ApiOperation("根据在职状态查询员工")
     @GetMapping("/page")
-    public Result page(int page,int pageSize,boolean estatus){              //根据员工在职状态查询
-        log.info("page={},pagesize={},estatus={}",page,pageSize,estatus);
+    public Result page(int page,int pageSize){              //根据员工在职状态查询
+        log.info("page={},pagesize={},estatus={}",page,pageSize);
         Page pageInfo = new Page(page,pageSize);
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Employee::isEstatus,estatus);
-        queryWrapper.orderByDesc(Employee::getEid);
+        queryWrapper.orderByDesc(Employee::isEstatus);
         employeeService.page(pageInfo,queryWrapper);
         return Result.success(200,"查询成功",pageInfo);
     }

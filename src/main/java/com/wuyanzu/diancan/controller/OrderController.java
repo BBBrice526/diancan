@@ -6,11 +6,15 @@ import com.wuyanzu.diancan.entity.Order;
 import com.wuyanzu.diancan.service.OrderService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Slf4j
 @RestController
@@ -63,9 +67,11 @@ public class OrderController {
 
     @ApiOperation("变更订单状态")
     @PostMapping("/status")
-    public Result orderStatusUpdate(@RequestParam Long oid,@RequestParam Integer ostatus){
-        Order order = orderService.getById(oid);
-        order.setOstatus(ostatus);
+    public Result orderStatusUpdate(@RequestBody Order order){
+        if(order.getOstatus() == 1){
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            order.setCreateTime(timestamp);
+        }
         orderService.updateById(order);
         return Result.success(200,"状态已变更",order);
     }
