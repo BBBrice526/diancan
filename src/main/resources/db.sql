@@ -32,7 +32,7 @@ CREATE TABLE `employee` (
   `sex` varchar(2) DEFAULT NULL,
   `role` varchar(5) DEFAULT NULL,
   `idnum` varchar(18) NOT NULL,
-  `estatus` tinyint(2) DEFAULT NULL DEFAULT '0',
+  `estatus` tinyint(4) NOT NULL,
   PRIMARY KEY (`eid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -41,10 +41,9 @@ CREATE TABLE `employee` (
 -- Dumping data for table `employee`
 --
 
-
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'admin','1111','12345678910','未知','管理员','123456789101112131');
+INSERT INTO `employee` VALUES (1,'admin','3b712de48137572f3849aabd5666a4e3','12345678910','女','服务员','123456789101112131',1),(2,'张文迪','81dc9bdb52d04dc20036dbd8313ed055','15151515151','男','后厨','181818181818181818',1),(678224360,'管理员','3b712de48137572f3849aabd5666a4e3','15677773333','女','管理员','159765200369422251',1),(1124066311,'测试4','e10adc3949ba59abbe56e057f20f883e','15688881111','女','服务员','410777555623945501',0),(1216383252,'测试','e10adc3949ba59abbe56e057f20f883e','15677778888','男','后厨','410777555623945502',0),(1741638572,'测试2','e10adc3949ba59abbe56e057f20f883e','15799996666','女','服务员','410777555623945502',0);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,12 +62,12 @@ CREATE TABLE `food` (
   `fprice` decimal(10,2) NOT NULL,
   `fstatus` tinyint(2) NOT NULL DEFAULT '1',
   `ftype` varchar(20) NOT NULL,
-  `noteat` tinyint(4) DEFAULT NULL DEFAULT '0',
-  `hot` tinyint(4) DEFAULT NULL DEFAULT '0',
-  `sweet` tinyint(4) DEFAULT NULL DEFAULT '0',
-  `temp` tinyint(4) DEFAULT NULL DEFAULT '0',
+  `noteat` tinyint(4) DEFAULT '0',
+  `hot` tinyint(4) DEFAULT '0',
+  `sweet` tinyint(4) DEFAULT '0',
+  `temp` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`fid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,19 +76,20 @@ CREATE TABLE `food` (
 
 LOCK TABLES `food` WRITE;
 /*!40000 ALTER TABLE `food` DISABLE KEYS */;
+INSERT INTO `food` VALUES (200,'干炒牛河',NULL,'很多油',114.51,1,'粉',0,1,0,0),(201,'白粥',NULL,'很少米',4.00,1,'粥',0,0,0,1),(202,'湿炒牛河',NULL,'超级多油',15.00,1,'粉',0,1,0,0),(203,'榨菜',NULL,'超级下粥',0.50,0,'配菜',0,0,0,0),(204,'油焖大虾',NULL,'听说很好吃',45.90,1,'硬菜',1,0,0,0),(205,'葱烧海参',NULL,'不喜欢吃葱的别点',59.50,1,'硬菜',1,0,0,0);
 /*!40000 ALTER TABLE `food` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `order`
+-- Table structure for table `orders`
 --
 
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `orders`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order` (
-  `oid` int(20) NOT NULL AUTO_INCREMENT,
-  `ostatus` tinyint(8) NOT NULL DEFAULT '0',
+CREATE TABLE `orders` (
+  `oid` int(20) NOT NULL,
+  `ostatus` tinyint(8) NOT NULL,
   `uid` int(20) DEFAULT NULL,
   `createtime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `oprice` decimal(10,2) DEFAULT NULL,
@@ -100,12 +100,12 @@ CREATE TABLE `order` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `order`
+-- Dumping data for table `orders`
 --
 
-LOCK TABLES `order` WRITE;
-/*!40000 ALTER TABLE `order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order` ENABLE KEYS */;
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -149,7 +149,7 @@ CREATE TABLE `table` (
   `tnum` int(10) NOT NULL AUTO_INCREMENT,
   `tstatus` tinyint(4) NOT NULL DEFAULT '0',
   `eid` int(20) DEFAULT NULL,
-  PRIMARY KEY (`tid`)
+  PRIMARY KEY (`tnum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -179,7 +179,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`uid`),
   UNIQUE KEY `id_UNIQUE` (`uid`),
   UNIQUE KEY `openid_UNIQUE` (`openid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -188,6 +188,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (2,'test','11111111111','男','','2023-06-28 15:14:36');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -200,4 +201,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-28 14:45:38
+-- Dump completed on 2023-07-04 15:17:17

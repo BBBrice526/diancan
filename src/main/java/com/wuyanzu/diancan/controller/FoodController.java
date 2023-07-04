@@ -34,7 +34,19 @@ public class FoodController {
 
     @ApiOperation("新增菜品")
     @PostMapping("/save")
-    public Result save(@RequestParam(name = "file") MultipartFile file, @RequestBody @Valid Food food, BindingResult bindingResult) throws IOException {
+    public Result save(@RequestBody @Valid Food food, BindingResult bindingResult) throws IOException {
+        log.info("food={}",food.toString());
+        if(bindingResult.hasErrors()){
+                return Result.error(201,bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+        foodService.save(food);
+        return Result.success(200,"菜品新增成功",food);
+    }
+
+
+
+    @PostMapping("/upload")
+    public Result uploadImage(@RequestParam MultipartFile file) throws IOException {
         if(!file.isEmpty()){
             String filename = file.getOriginalFilename();
             File filepath = new File(path, filename);
@@ -42,32 +54,11 @@ public class FoodController {
                 filepath.getParentFile().mkdirs();
             }
             file.transferTo(new File(path + File.separator + filename));
-            if(bindingResult.hasErrors()){
-                return Result.error(201,bindingResult.getAllErrors().get(0).getDefaultMessage());
-            }
-            log.info("food={}",food.toString());
-            food.setFimage(filepath.getAbsolutePath());
-            foodService.save(food);
             return Result.success(200,"菜品新增成功",filepath.getAbsolutePath());
         }else {
-            return Result.error(201,"请上传菜品图片");
+            return Result.error(201,"上传图片失败");
         }
     }
-
-//    @PostMapping("/test")
-//    public Result uploadImage(@RequestParam MultipartFile file) throws IOException {
-//        if(!file.isEmpty()){
-//            String filename = file.getOriginalFilename();
-//            File filepath = new File(path, filename);
-//            if (!filepath.getParentFile().exists()) {
-//                filepath.getParentFile().mkdirs();
-//            }
-//            file.transferTo(new File(path + File.separator + filename));
-//            return Result.success(200,"菜品新增成功",filepath.getAbsolutePath());
-//        }else {
-//            return Result.error(201,"请上传菜品图片");
-//        }
-//    }
 
     @ApiOperation("得到所有菜品种类")
     @GetMapping("/getftype")
@@ -85,8 +76,8 @@ public class FoodController {
 
     @ApiOperation("根据菜品种类排序后得到所有菜品信息")
     @GetMapping("/pageforftype")
-    public Result pageForFtype(){
-        Page<Food> foodPage = new Page<>();
+    public Result pageForFtype(int page,int pageSize){
+        Page<Food> foodPage = new Page<>(page,pageSize);
         QueryWrapper<Food> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("fstatus",1);
         queryWrapper.orderByDesc("ftype");

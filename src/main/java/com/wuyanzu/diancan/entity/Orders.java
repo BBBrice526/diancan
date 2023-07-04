@@ -1,8 +1,8 @@
 package com.wuyanzu.diancan.entity;
 
 import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -10,8 +10,8 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Data
-@TableName("order")
-public class Order {
+@TableName("orders")
+public class Orders {
     @TableId
     private Long oid;         //订单id
 
@@ -26,5 +26,6 @@ public class Order {
 
     private String remark;              //订单备注
 
+    @TableField(value = "createtime")
     private Timestamp createTime;           //下单时间
 }

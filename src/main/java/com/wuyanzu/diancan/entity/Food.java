@@ -31,8 +31,6 @@ public class Food {
     @NotBlank(message = "请输入菜品种类")
     private String ftype;       //菜品种类
 
-    private boolean noteat;     //忌口标识
-
     private boolean hot;        //辣度标识
 
     private boolean sweet;      //甜度标识

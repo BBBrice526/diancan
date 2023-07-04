@@ -11,7 +11,6 @@ import lombok.Data;
 @TableName("employee")
 public class Employee {
     @TableId
-    @NotNull(message = "请设置员工工号")
     private Long eid;       //员工工号
 
     @NotBlank(message = "请设置员工姓名")
