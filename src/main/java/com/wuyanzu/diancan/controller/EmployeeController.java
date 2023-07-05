@@ -42,7 +42,7 @@ public class EmployeeController {
         if(!employee1.isEstatus()){
             return  Result.error(201,"账号冻结，去找管理");
         }
-        if(employee1.getRole()!="管理员"){
+        if(!employee1.getRole().equals("管理员")){
             return Result.error(201,"非管理员账号");
         }
         session.setAttribute("eid",employee1.getEid());             //登录成功将eid放入session
