@@ -79,7 +79,7 @@ public class FoodController {
     public Result pageForFtype(int page,int pageSize){
         Page<Food> foodPage = new Page<>(page,pageSize);
         QueryWrapper<Food> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("fstatus",1);
+//        queryWrapper.eq("fstatus",1);
         queryWrapper.orderByDesc("ftype");
         foodService.page(foodPage,queryWrapper);
         if(queryWrapper.isEmptyOfNormal()){
@@ -106,7 +106,7 @@ public class FoodController {
     }
 
     @ApiOperation("根据fid查找")
-    @RequestMapping("/get")
+    @GetMapping("/get")
     public Result getByFid(@RequestParam Integer fid){
         Food food = foodService.getById(fid);
         return Result.success(200,"查找成功 ",food);
@@ -114,29 +114,26 @@ public class FoodController {
 
     @ApiOperation("更新菜品信息")
     @PostMapping("/update")
-    public Result update(@RequestParam(name = "file") MultipartFile file,@RequestBody @Valid Food food,BindingResult bindingResult) throws IOException {
-        String path = "D/src/main/resources/static/image";
-        String filename = file.getOriginalFilename();
-        File filepath = new File(path, filename);
-        if (!filepath.getParentFile().exists()) {
-            filepath.getParentFile().mkdirs();
-        }
-        file.transferTo(new File(path + File.separator + filename));
+    public Result update(@RequestBody @Valid Food food,BindingResult bindingResult) throws IOException {
         if(bindingResult.hasErrors()){
             return Result.error(201,bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
         log.info("food={}",food.toString());
-        food.setFimage(filepath.getAbsolutePath());
         foodService.updateById(food);
-        return Result.success(200,"更新成功",filepath.getAbsolutePath());
+        return Result.success(200,"更新成功",food);
     }
 
     @ApiOperation("只修改菜品状态")
     @PostMapping("/fstatus")
     public Result updateFstatus(@RequestParam boolean fstatus,@RequestParam Integer fid){
-        Food food = foodService.getById(fid);
+        log.info(String.valueOf(fstatus),fid);
+        LambdaQueryWrapper<Food> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Food::getFid,fid);
+        Food food = foodService.getOne(queryWrapper);
         food.setFstatus(fstatus);
         foodService.updateById(food);
         return Result.success(200,"状态修改成功",food.getFname());
     }
+
+
 }
