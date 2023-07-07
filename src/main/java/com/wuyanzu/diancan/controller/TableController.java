@@ -54,4 +54,12 @@ public class TableController {
         IPage<Tables> iPage = tableService.page(pageInfo,queryWrapper);
         return Result.success(200,"",iPage);
     }
+
+
+    @ApiOperation("删除桌子")
+    @DeleteMapping("/delete")
+    public  Result deleteTable(int tnum){
+        tableService.removeById(tnum);
+        return Result.success(200,"已删除",tnum);
+    }
 }
