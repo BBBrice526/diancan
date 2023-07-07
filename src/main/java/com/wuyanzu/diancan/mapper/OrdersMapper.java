@@ -5,5 +5,5 @@ import com.wuyanzu.diancan.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface OrderMapper extends BaseMapper<Orders> {
+public interface OrdersMapper extends BaseMapper<Orders> {
 }

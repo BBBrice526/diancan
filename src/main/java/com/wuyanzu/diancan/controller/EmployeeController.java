@@ -1,9 +1,11 @@
 package com.wuyanzu.diancan.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.Employee;
+import com.wuyanzu.diancan.entity.Food;
 import com.wuyanzu.diancan.service.EmployeeService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +29,7 @@ public class EmployeeController {
     @ApiOperation("员工登录")
     @PostMapping("/login")
     public Result login(@RequestBody Employee employee, HttpSession session){       //员工用手机号及密码登录，输入的密码进行加密
+        log.info(employee.toString());
         String pw = employee.getPassword();
         pw = DigestUtils.md5DigestAsHex(pw.getBytes());
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
@@ -78,8 +81,8 @@ public class EmployeeController {
         Page pageInfo = new Page(page,pageSize);
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.orderByDesc(Employee::isEstatus);
-        employeeService.page(pageInfo,queryWrapper);
-        return Result.success(200,"查询成功",pageInfo);
+        IPage<Food> iPage = employeeService.page(pageInfo,queryWrapper);
+        return Result.success(200,"查询成功",iPage);
     }
 
     @ApiOperation("更改员工信息")

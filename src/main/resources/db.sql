@@ -18,7 +18,7 @@ USE `diancan`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `employee`
+-- Table structure for tables `employee`
 --
 
 DROP TABLE IF EXISTS `employee`;
@@ -38,7 +38,7 @@ CREATE TABLE `employee` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `employee`
+-- Dumping data for tables `employee`
 --
 
 LOCK TABLES `employee` WRITE;
@@ -48,7 +48,7 @@ INSERT INTO `employee` VALUES (1,'admin','e10adc3949ba59abbe56e057f20f883e','123
 UNLOCK TABLES;
 
 --
--- Table structure for table `food`
+-- Table structure for tables `food`
 --
 
 DROP TABLE IF EXISTS `food`;
@@ -70,7 +70,7 @@ CREATE TABLE `food` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `food`
+-- Dumping data for tables `food`
 --
 
 LOCK TABLES `food` WRITE;
@@ -80,7 +80,7 @@ INSERT INTO `food` VALUES (200,'干炒牛河',NULL,'很多油',114.51,1,'粉',1,
 UNLOCK TABLES;
 
 --
--- Table structure for table `order_detail`
+-- Table structure for tables `order_detail`
 --
 
 DROP TABLE IF EXISTS `order_detail`;
@@ -101,7 +101,7 @@ CREATE TABLE `order_detail` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `order_detail`
+-- Dumping data for tables `order_detail`
 --
 
 LOCK TABLES `order_detail` WRITE;
@@ -111,7 +111,7 @@ INSERT INTO `order_detail` VALUES (1676159990336880641,1,200,'干炒牛河','c/c
 UNLOCK TABLES;
 
 --
--- Table structure for table `orders`
+-- Table structure for tables `orders`
 --
 
 DROP TABLE IF EXISTS `orders`;
@@ -130,7 +130,7 @@ CREATE TABLE `orders` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `orders`
+-- Dumping data for tables `orders`
 --
 
 LOCK TABLES `orders` WRITE;
@@ -140,13 +140,13 @@ INSERT INTO `orders` VALUES (1,1,1,'2023-07-04 15:40:18',50.10,1,'哈哈真好�
 UNLOCK TABLES;
 
 --
--- Table structure for table `table`
+-- Table structure for tables `tables`
 --
 
-DROP TABLE IF EXISTS `table`;
+DROP TABLE IF EXISTS `tables`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `table` (
+CREATE TABLE `tables` (
   `tnum` int(10) NOT NULL AUTO_INCREMENT,
   `tstatus` tinyint(4) NOT NULL DEFAULT '0',
   `eid` int(20) DEFAULT NULL,
@@ -155,16 +155,16 @@ CREATE TABLE `table` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `table`
+-- Dumping data for tables `tables`
 --
 
-LOCK TABLES `table` WRITE;
-/*!40000 ALTER TABLE `table` DISABLE KEYS */;
-/*!40000 ALTER TABLE `table` ENABLE KEYS */;
+LOCK TABLES `tables` WRITE;
+/*!40000 ALTER TABLE `tables` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tables` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user`
+-- Table structure for tables `user`
 --
 
 DROP TABLE IF EXISTS `user`;
@@ -184,7 +184,7 @@ CREATE TABLE `user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- Dumping data for tables `user`
 --
 
 LOCK TABLES `user` WRITE;

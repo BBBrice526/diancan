@@ -1,9 +1,10 @@
 package com.wuyanzu.diancan.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.Orders;
-import com.wuyanzu.diancan.service.OrderService;
+import com.wuyanzu.diancan.service.OrdersService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +17,9 @@ import java.sql.Timestamp;
 @Slf4j
 @RestController
 @RequestMapping("/order")
-public class OrderController {
+public class OrdersController {
     @Autowired
-    private OrderService orderService;
+    private OrdersService ordersService;
 
     @ApiOperation("订单生成")
     @PostMapping("/save")
@@ -26,7 +27,7 @@ public class OrderController {
         log.info("订单数据：{}", orders);
         //order.setUid((Long) session.getAttribute("uid"));
         orders.setOstatus(0);
-        orderService.save(orders);
+        ordersService.save(orders);
         return Result.success(200,"开始下单", orders);
     }
 
@@ -37,7 +38,7 @@ public class OrderController {
         queryWrapper.eq(Orders::getTnum,tnum);
         queryWrapper.ne(Orders::getOstatus,4);
         queryWrapper.ne(Orders::getOstatus,5);
-        Orders orders1 = orderService.getById(queryWrapper);
+        Orders orders1 = ordersService.getById(queryWrapper);
         return Result.success(200,"", orders1);
     }
 
@@ -48,7 +49,7 @@ public class OrderController {
         queryWrapper.eq(Orders::getUid,uid);
         queryWrapper.ne(Orders::getOstatus,4);
         queryWrapper.ne(Orders::getOstatus,5);
-        Orders orders1 = orderService.getById(queryWrapper);
+        Orders orders1 = ordersService.getById(queryWrapper);
         return Result.success(200,"", orders1);
     }
 
@@ -58,8 +59,8 @@ public class OrderController {
         Page<Orders> orderPage = new Page<>();
         LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Orders::getUid,uid);
-        orderService.page(orderPage,queryWrapper);
-        return Result.success(200,"",orderPage);
+        IPage<Orders> iPage = ordersService.page(orderPage,queryWrapper);
+        return Result.success(200,"",iPage);
     }
 
     @ApiOperation("查询所有订单")
@@ -69,18 +70,32 @@ public class OrderController {
         LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.orderByDesc(Orders::getOstatus)
                 .ne(Orders::getOstatus,0);
-        orderService.page(orderPage,queryWrapper);
-        return Result.success(200,"所有订单",orderPage);
+        IPage<Orders> iPage = ordersService.page(orderPage,queryWrapper);
+        return Result.success(200,"所有订单",iPage);
     }
 
     @ApiOperation("变更订单状态")
     @PostMapping("/status")
-    public Result orderStatusUpdate(@RequestBody Orders orders){
-        if(orders.getOstatus() == 1){
+    public Result orderStatusUpdate(@RequestParam Long oid,@RequestParam Integer ostatus){
+        log.info(String.valueOf(ostatus),oid.toString());
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Orders::getOid,oid);
+        Orders orders = ordersService.getOne(queryWrapper);
+        orders.setOstatus(ostatus);
+        if(ostatus == 1){
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             orders.setCreateTime(timestamp);
         }
-        orderService.updateById(orders);
+        ordersService.updateById(orders);
         return Result.success(200,"状态已变更", orders);
+    }
+
+    @ApiOperation("根据订单号查询订单")
+    @GetMapping("/oid")
+    public Result getOrderByOid(@RequestParam Long oid){
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Orders::getOid,oid);
+        Orders orders1 = ordersService.getOne(queryWrapper);
+        return Result.success(200,"该订单", orders1);
     }
 }

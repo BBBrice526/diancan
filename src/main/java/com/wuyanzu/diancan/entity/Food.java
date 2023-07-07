@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -12,7 +13,7 @@ import lombok.Data;
 @Data
 @TableName("food")
 public class Food {
-    @TableId
+    @TableId(type= IdType.AUTO)
     private Integer fid;        //菜品编号
 
     @Size(max = 20,message = "菜名长度0-20！")

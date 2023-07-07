@@ -1,6 +1,7 @@
 package com.wuyanzu.diancan.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.OrderDetail;
 import com.wuyanzu.diancan.service.OrderDetailService;
@@ -44,8 +45,8 @@ public class OrderDetailController {
         Page<OrderDetail> odpage = new Page<>();
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OrderDetail::getOid,oid);
-        orderDetailService.page(odpage,queryWrapper);
-        return Result.success(200,"该订单商品有",odpage);
+        IPage<OrderDetail> iPage = orderDetailService.page(odpage,queryWrapper);
+        return Result.success(200,"该订单商品有",iPage);
     }
 
     @ApiOperation("减少商品")
