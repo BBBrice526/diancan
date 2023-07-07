@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.OrderDetail;
+import com.wuyanzu.diancan.service.FoodService;
 import com.wuyanzu.diancan.service.OrderDetailService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,9 @@ public class OrderDetailController {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    @Autowired
+    private FoodService foodService;
+
     @ApiOperation("添加商品到订单")
     @PostMapping("/add")
     public Result add(@RequestBody OrderDetail orderDetail){
@@ -26,15 +30,17 @@ public class OrderDetailController {
         queryWrapper.eq(OrderDetail::getOid,orderDetail.getOid());
         queryWrapper.eq(OrderDetail::getOdname,orderDetail.getOdname());
         queryWrapper.eq(OrderDetail::getOdstatus,0);
-        OrderDetail orderDetail1 = orderDetailService.getOne(queryWrapper);
-        if(orderDetail1 != null){                                                           // 如果订单中已存在 则在原来基础上数量加1即可
+        OrderDetail orderDetail1 = orderDetailService.getOne(queryWrapper,false);
+        String odimage = foodService.getById(orderDetail.getFid()).getFimage();
+        if(orderDetail1 == null){                                                           // 如果订单中已存在 则在原来基础上数量加1即可
+            orderDetail.setOdcount(1);
+            orderDetail.setOdimage(odimage);
+            orderDetailService.save(orderDetail);
+            orderDetail1 = orderDetail;
+        }else{                                                                              // 如果不存在 则正常添加
             Integer count = orderDetail1.getOdcount();
             orderDetail1.setOdcount(count+1);
             orderDetailService.updateById(orderDetail1);
-        }else{                                                                              // 如果不存在 则正常添加
-            orderDetail.setOdcount(1);
-            orderDetailService.save(orderDetail);
-            orderDetail1 = orderDetail;
         }
         return Result.success(200,"商品加到订单",orderDetail1);
     }
@@ -67,6 +73,17 @@ public class OrderDetailController {
             orderDetailService.updateById(orderDetail1);
         }
         return Result.success(200,"商品已减少",orderDetail1);
+    }
+
+    @ApiOperation("商品状态变更")
+    @PostMapping("/update")
+    public Result updateOd(Long odid, Integer odstatus){
+        LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderDetail::getOdid,odid);
+        OrderDetail orderDetail = orderDetailService.getOne(queryWrapper);
+        orderDetail.setOdstatus(odstatus);
+        orderDetailService.updateById(orderDetail);
+        return Result.success(200,"状态修改成功",odstatus);
     }
 
 }
