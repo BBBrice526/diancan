@@ -9,6 +9,7 @@ import com.wuyanzu.diancan.entity.Food;
 import com.wuyanzu.diancan.service.EmployeeService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Slf4j
@@ -86,8 +90,11 @@ public class EmployeeController {
 
     @ApiOperation("更改员工信息")
     @PostMapping("/update")
-    public Result update(@RequestBody Employee employee){       //员工信息更改，无判断，密码加密后进入数据库
+    public Result update(@RequestBody @Valid Employee employee,BindingResult bindingResult){       //员工信息更改，无判断，密码加密后进入数据库
         log.info(employee.toString());
+        if(bindingResult.hasErrors()){
+            return Result.error(201,bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
 //        if(!employee.getPassword().isEmpty()){
 //            String pw = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
 //            employee.setPassword(pw);
@@ -98,20 +105,24 @@ public class EmployeeController {
 
     @ApiOperation("更改员工密码")
     @PostMapping("/resetpw")
-    public Result resetPassword(@RequestBody Employee employee){        //只修改密码，根据eid查找员工，修改pw
-        log.info(employee.toString());
-        if(employeeService.getById(employee.getEid()) == null){
+    public Result resetPassword(Long eid,String password){        //只修改密码，根据eid查找员工，修改pw
+        log.info(eid.toString());
+        Employee employee = employeeService.getById(eid);
+        if(employee == null){
             return Result.error(201,"该员工不存在");
         }
-        employee.setPassword(DigestUtils.md5DigestAsHex(employee.getPassword().getBytes()));
+        employee.setPassword(DigestUtils.md5DigestAsHex(password.getBytes()));
         employeeService.updateById(employee);
         return Result.success(200,"密码已修改",employee.getPassword());
     }
 
     @ApiOperation("用eid查询员工信息")
     @GetMapping("/get")
-    public Result getByEid(@RequestParam Long eid){             //根据eid查找员工
-        log.info("根据工号查询");
+    public Result getByEid(@NotEmpty @NotNull Long eid){             //根据eid查找员工
+        if(eid == null){
+            return Result.error(201,"请输入要查询的工号");
+        }
+        log.info("根据工号查询",eid);
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Employee::getEid,eid);
         Employee employee = employeeService.getOne(queryWrapper);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -101,4 +102,12 @@ public class OrdersController {
         Orders orders1 = ordersService.getOne(queryWrapper);
         return Result.success(200,"该订单", orders1);
     }
+
+//    @RequestMapping("/list")
+//    public List<Orders> list(){
+//        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+//        return ordersService.list(queryWrapper);
+//    }
+
+
 }

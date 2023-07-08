@@ -18,7 +18,7 @@ public class Employee {
 
     private String password;     //登录密码
 
-    @NotBlank(message = "请输入电话")
+    @Size(max = 11,min = 11,message = "请输入电话")
     private String phone;       //联络电话
 
     private String sex;        //性别

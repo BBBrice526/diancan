@@ -188,6 +188,16 @@ public class FoodController {
         return Result.success(200,"该种类菜品",iPage);
     }
 
+    @ApiOperation("所有在售菜品信息")
+    @GetMapping("/list")
+    public Result list(){
+        LambdaQueryWrapper<Food> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Food::isFstatus,1);
+        queryWrapper.orderByDesc(Food::getFtype);
+        List<Food> foods = foodService.list(queryWrapper);
+        return Result.success(200,"在售菜品",foods);
+    }
+
     @ApiOperation("根据菜品种类获得该种类菜品信息")
     @GetMapping("/pagebyftype")
     public Result pageByFtype(@RequestParam String ftype){
