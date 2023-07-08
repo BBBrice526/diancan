@@ -35,9 +35,9 @@ public class OrdersController {
     @GetMapping("/tnum")
     public Result getOrderByTnum(@RequestParam Integer tnum){
         LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Orders::getTnum,tnum);
-        queryWrapper.ne(Orders::getOstatus,4);
-        queryWrapper.ne(Orders::getOstatus,5);
+        queryWrapper.eq(Orders::getTnum,tnum)jiaoqueryWrapper.ne(Orders::getOstatus,3)
+                .ne(Orders::getOstatus,4)
+                .ne(Orders::getOstatus,5);
         Orders orders1 = ordersService.getById(queryWrapper);
         return Result.success(200,"", orders1);
     }
@@ -45,11 +45,13 @@ public class OrdersController {
     @ApiOperation("根据uid查询未完成订单")
     @GetMapping("/uid")
     public Result getOrderByUid(@RequestParam Long uid){
+        log.info(uid.toString());
         LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Orders::getUid,uid);
+        queryWrapper.ne(Orders::getOstatus,3);
         queryWrapper.ne(Orders::getOstatus,4);
         queryWrapper.ne(Orders::getOstatus,5);
-        Orders orders1 = ordersService.getById(queryWrapper);
+        Orders orders1 = ordersService.getOne(queryWrapper);
         return Result.success(200,"", orders1);
     }
 

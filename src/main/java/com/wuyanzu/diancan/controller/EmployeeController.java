@@ -35,7 +35,6 @@ public class EmployeeController {
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Employee::getPhone,employee.getPhone());
         Employee employee1 = employeeService.getOne(queryWrapper);
-
         if(employee1 == null){                                          //根据手机号查询员工对象，判断该员工输入信息
             return Result.error(201,"用户不存在");
         }

@@ -191,6 +191,7 @@ public class FoodController {
     @ApiOperation("根据菜品种类获得该种类菜品信息")
     @GetMapping("/pagebyftype")
     public Result pageByFtype(@RequestParam String ftype){
+        log.info(ftype);
         Page<Food> foodPage = new Page<>();
         LambdaQueryWrapper<Food> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Food::isFstatus,1);
@@ -244,6 +245,14 @@ public class FoodController {
 //        foodService.updateById(food1);
 //        return Result.success(200,"状态修改成功",food.getFname());
 //    }
+
+    @ApiOperation("删除菜品")
+    @DeleteMapping("/delete")
+    public Result deleteFood(Integer fid){
+        String name = foodService.getById(fid).getFname();
+        foodService.removeById(fid);
+        return Result.success(200,"已删除",name);
+    }
 
 
 }
