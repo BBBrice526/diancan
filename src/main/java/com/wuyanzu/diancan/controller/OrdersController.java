@@ -35,7 +35,8 @@ public class OrdersController {
     @GetMapping("/tnum")
     public Result getOrderByTnum(@RequestParam Integer tnum){
         LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Orders::getTnum,tnum)jiaoqueryWrapper.ne(Orders::getOstatus,3)
+        queryWrapper.eq(Orders::getTnum,tnum);
+        queryWrapper.ne(Orders::getOstatus,3)
                 .ne(Orders::getOstatus,4)
                 .ne(Orders::getOstatus,5);
         Orders orders1 = ordersService.getById(queryWrapper);
