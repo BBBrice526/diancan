@@ -29,5 +29,5 @@ public class OrderDetail {
 
     private String taste;           //商品备注
 
-    private Integer odstatus;       //商品状态标识，0为已下单、1为已完成
+    private Integer odstatus;       //商品状态标识，0为已下单、1为未上菜、2为已完成
 }

@@ -219,6 +219,9 @@ public class FoodController {
     @GetMapping("/get")
     public Result getByFid(@RequestParam Integer fid){
         Food food = foodService.getById(fid);
+        if(food == null){
+            return Result.error(201,"查无此菜");
+        }
         return Result.success(200,"查找成功 ",food);
     }
 

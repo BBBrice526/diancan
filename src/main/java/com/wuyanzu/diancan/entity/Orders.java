@@ -5,6 +5,7 @@ import javax.validation.constraints.Max;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -26,6 +27,7 @@ public class Orders {
 
     private String remark;              //订单备注
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(value = "createtime")
     private Timestamp createTime;           //下单时间
 }

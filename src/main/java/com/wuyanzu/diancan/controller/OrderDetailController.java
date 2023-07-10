@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.OrderDetail;
+import com.wuyanzu.diancan.entity.Orders;
 import com.wuyanzu.diancan.service.FoodService;
 import com.wuyanzu.diancan.service.OrderDetailService;
+import com.wuyanzu.diancan.service.OrdersService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 public class OrderDetailController {
     @Autowired
     private OrderDetailService orderDetailService;
+
+    @Autowired
+    private OrdersService ordersService;
 
     @Autowired
     private FoodService foodService;
@@ -48,6 +53,7 @@ public class OrderDetailController {
     @ApiOperation("获得订单下所有商品")
     @GetMapping("/get")
     public Result getDetails(@RequestParam Long oid){
+        //log.info(oid.toString());
         Page<OrderDetail> odpage = new Page<>();
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OrderDetail::getOid,oid);
@@ -84,6 +90,41 @@ public class OrderDetailController {
         orderDetail.setOdstatus(odstatus);
         orderDetailService.updateById(orderDetail);
         return Result.success(200,"状态修改成功",odstatus);
+    }
+
+//    @ApiOperation("获得订单下未完成商品")
+//    @GetMapping("/getod")
+//    public Result getOd(@RequestParam Long oid){
+//        Page<OrderDetail> odpage = new Page<>();
+//        LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
+//        queryWrapper.eq(OrderDetail::getOid,oid);
+//        queryWrapper.eq(OrderDetail::getOdstatus,0);
+//        IPage<OrderDetail> iPage = orderDetailService.page(odpage,queryWrapper);
+//        return Result.success(200,"该订单商品有",iPage);
+//    }
+
+    @ApiOperation("获得订单下未完成商品")
+    @GetMapping("/getod")
+    public Result getOd(@RequestParam Integer tnum){
+        log.info(tnum.toString());
+        Page<OrderDetail> odpage = new Page<>();
+        LambdaQueryWrapper<Orders> oqueryWrapper = new LambdaQueryWrapper<>();
+
+        oqueryWrapper.eq(Orders::getTnum,tnum);
+        oqueryWrapper.ne(Orders::getOstatus,3)
+                .ne(Orders::getOstatus,4)
+                .ne(Orders::getOstatus,5);
+        Orders orders = ordersService.getOne(oqueryWrapper);
+        if(orders == null){
+            return Result.error(201,"当前桌子无准备中订单");
+        }
+        Long oid = orders.getOid();
+        log.info(oid.toString());
+        LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderDetail::getOid,oid);
+        queryWrapper.eq(OrderDetail::getOdstatus,0);
+        IPage<OrderDetail> iPage = orderDetailService.page(odpage,queryWrapper);
+        return Result.success(200,"该订单商品有",iPage);
     }
 
 }
