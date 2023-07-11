@@ -38,6 +38,7 @@ public class TableController {
     @ApiOperation("查询某状态所有桌子")
     @GetMapping("/page")
     public Result page(int page,int pageSize,boolean tstatus){      //根据桌子状态分页查询，设定页大小
+        //log.info(String.valueOf(page),pageSize,tstatus);
         Page pageInfo = new Page(page,pageSize);
         LambdaQueryWrapper<Tables> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Tables::getTstatus,tstatus);

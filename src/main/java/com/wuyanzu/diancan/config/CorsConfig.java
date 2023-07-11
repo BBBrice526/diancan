@@ -1,11 +1,10 @@
 package com.wuyanzu.diancan.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.context.request.async.TimeoutCallableProcessingInterceptor;
+import org.springframework.web.servlet.config.annotation.*;
 
 @ComponentScan("com.wuyanzu.diancan.controller")
 @EnableWebMvc    //在此处用于开启
@@ -28,9 +27,29 @@ public class CorsConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
         registry.addResourceHandler("/food/**")
                 .addResourceLocations("file:" + System.getProperty("user.dir")+"\\src\\main\\resources\\files\\");
-//                .addResourceLocations("file:///C:/Users/BricePC/Desktop/diancan/src/src/main/resources/files/");
+//        registry.addResourceHandler("/food/**")
+//                .addResourceLocations("file:/www/wwwroot/files");
 //        .addResourceLocations("file:///"+System.getProperty("user.dir")+"/src/main/resources/files/");
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }
+
+    @Override
+
+    public void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
+
+        configurer.setDefaultTimeout(20000);
+
+        configurer.registerCallableInterceptors(timeoutInterceptor());
+
+    }
+
+    @Bean
+
+    public TimeoutCallableProcessingInterceptor timeoutInterceptor() {
+
+        return new TimeoutCallableProcessingInterceptor();
+
+    }
+
 
 }

@@ -23,7 +23,7 @@ public class UserController {
     @ApiOperation("登录，没有账号则自动注册")
     @PostMapping("/login")
     public Result login (@RequestBody User user,HttpSession session){   //用户授权登录，用openid识别用户
-        log.info(user.toString());
+//        log.info(user.toString());
         int hash = Math.abs(UUID.randomUUID().hashCode());
         String opid = user.getOpenid();
         user.setUid(Long.valueOf(hash));

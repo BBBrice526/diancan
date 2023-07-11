@@ -4,12 +4,15 @@ import javax.validation.constraints.NotNull;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 @Data
 @TableName("order_detail")
 public class OrderDetail {
     @TableId
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long odid;          //商品id
 
     @NotNull(message = "请输入所属订单")

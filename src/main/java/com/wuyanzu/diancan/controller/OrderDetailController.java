@@ -10,9 +10,12 @@ import com.wuyanzu.diancan.service.OrderDetailService;
 import com.wuyanzu.diancan.service.OrdersService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -29,26 +32,49 @@ public class OrderDetailController {
 
     @ApiOperation("添加商品到订单")
     @PostMapping("/add")
-    public Result add(@RequestBody OrderDetail orderDetail){
-        //log.info("商品信息:{}",orderDetail);
+    public Result add(@RequestBody Map<String, Object> data/*OrderDetail orderDetail,Integer tnum*/){
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOdname((String) data.get("odname"));
+        orderDetail.setFid((Integer) data.get("fid"));
+        String odimage = foodService.getById(orderDetail.getFid()).getFimage();
+        double fprice = foodService.getById(orderDetail.getFid()).getFprice();
+        orderDetail.setTaste((String) data.get("taste"));
+        orderDetail.setOdprice(fprice);
+        Integer tnum = Integer.valueOf((String) data.get("tnum"));
+        log.info("商品信息:{}"+tnum,orderDetail);
+        Orders orders = ordersService.thereIsOrder(tnum);
+        log.info(orders.toString());
+        Long oid = orders.getOid();
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();              // 查询当前菜品是否在订单中，未上菜状态
-        queryWrapper.eq(OrderDetail::getOid,orderDetail.getOid());
+        queryWrapper.eq(OrderDetail::getOid,oid);
         queryWrapper.eq(OrderDetail::getOdname,orderDetail.getOdname());
         queryWrapper.eq(OrderDetail::getOdstatus,0);
         OrderDetail orderDetail1 = orderDetailService.getOne(queryWrapper,false);
-        String odimage = foodService.getById(orderDetail.getFid()).getFimage();
         if(orderDetail1 == null){                                                           // 如果订单中已存在 则在原来基础上数量加1即可
             orderDetail.setOdcount(1);
+            orderDetail.setOid(oid);
             orderDetail.setOdimage(odimage);
             orderDetailService.save(orderDetail);
-            orderDetail1 = orderDetail;
-        }else{                                                                              // 如果不存在 则正常添加
-            Integer count = orderDetail1.getOdcount();
-            orderDetail1.setOdcount(count+1);
-            orderDetailService.updateById(orderDetail1);
+        }else{                                                                      // 如果不存在 则正常添加
+            if(orderDetail1.getTaste().equals(orderDetail.getTaste())){
+                Integer count = orderDetail1.getOdcount();
+                orderDetail1.setOdcount(count + 1);
+                orderDetail1.setOdprice(fprice * (count + 1));
+                orderDetail1.setOid(oid);
+                orderDetailService.updateById(orderDetail1);
+            }else{
+                orderDetail.setOdcount(1);
+                orderDetail.setOid(oid);
+                orderDetail1.setOdprice(fprice);
+                orderDetail.setOdimage(odimage);
+                orderDetailService.save(orderDetail);
+            }
         }
-        return Result.success(200,"商品加到订单",orderDetail1);
+        IPage<OrderDetail> orderDetailIPage = (IPage<OrderDetail>) getOd(tnum).getData();
+        return Result.success(200,"商品加到订单",orderDetailIPage);
     }
+
+
 
     @ApiOperation("获得订单下所有商品")
     @GetMapping("/get")
@@ -63,7 +89,13 @@ public class OrderDetailController {
 
     @ApiOperation("减少商品")
     @PostMapping("/remove")
-    public Result remove(@RequestBody OrderDetail orderDetail){
+    public Result remove(@RequestBody Map<String, Object> data/*OrderDetail orderDetail*/){
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOdname((String) data.get("odname"));
+        orderDetail.setFid((Integer) data.get("fid"));
+        orderDetail.setTaste((String) data.get("taste"));
+        orderDetail.setOdprice((double) data.get("odprice"));
+        Integer tnum = Integer.valueOf((String) data.get("tnum"));
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();              // 查询当前菜品是否在订单中，未上菜状态
         queryWrapper.eq(OrderDetail::getOid,orderDetail.getOid());
         queryWrapper.eq(OrderDetail::getOdname,orderDetail.getOdname());
@@ -78,15 +110,20 @@ public class OrderDetailController {
             orderDetail1.setOdcount(count - 1);
             orderDetailService.updateById(orderDetail1);
         }
+        IPage<OrderDetail> orderDetailIPage = (IPage<OrderDetail>) getOd(tnum).getData();
         return Result.success(200,"商品已减少",orderDetail1);
     }
 
     @ApiOperation("商品状态变更")
     @PostMapping("/update")
     public Result updateOd(Long odid, Integer odstatus){
+        //log.info(odstatus.toString());
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OrderDetail::getOdid,odid);
         OrderDetail orderDetail = orderDetailService.getOne(queryWrapper);
+        if(orderDetail == null){
+            return Result.error(201,"没有该商品");
+        }
         orderDetail.setOdstatus(odstatus);
         orderDetailService.updateById(orderDetail);
         return Result.success(200,"状态修改成功",odstatus);
@@ -106,7 +143,7 @@ public class OrderDetailController {
     @ApiOperation("获得订单下未完成商品")
     @GetMapping("/getod")
     public Result getOd(@RequestParam Integer tnum){
-        log.info(tnum.toString());
+        //log.info(tnum.toString());
         Page<OrderDetail> odpage = new Page<>();
         LambdaQueryWrapper<Orders> oqueryWrapper = new LambdaQueryWrapper<>();
 
