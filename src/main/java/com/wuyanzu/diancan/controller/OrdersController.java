@@ -98,8 +98,7 @@ public class OrdersController {
     public Result getAllOrder(int page,int pageSize){
         Page<Orders> orderPage = new Page<>(page,pageSize);
         LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.orderByDesc(Orders::getOstatus)
-                .ne(Orders::getOstatus,0);
+        queryWrapper.orderByDesc(Orders::getOstatus);
         IPage<Orders> iPage = ordersService.page(orderPage,queryWrapper);
         return Result.success(200,"所有订单",iPage);
     }
