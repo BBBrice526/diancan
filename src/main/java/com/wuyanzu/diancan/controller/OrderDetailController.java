@@ -8,6 +8,7 @@ import com.wuyanzu.diancan.entity.Orders;
 import com.wuyanzu.diancan.service.FoodService;
 import com.wuyanzu.diancan.service.OrderDetailService;
 import com.wuyanzu.diancan.service.OrdersService;
+import com.wuyanzu.diancan.service.TableService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
@@ -29,6 +30,9 @@ public class OrderDetailController {
 
     @Autowired
     private FoodService foodService;
+
+    @Autowired
+    private TableService tableService;
 
     @ApiOperation("添加商品到订单")
     @PostMapping("/add")
@@ -66,6 +70,7 @@ public class OrderDetailController {
         double sumPrice = orderDetailService.sumPrice(oid);
         orders.setOprice(sumPrice);
         IPage<OrderDetail> orderDetailIPage = (IPage<OrderDetail>) getOd(tnum).getData();
+        tableService.getById(tnum).setTstatus(true);
         return Result.success(200,"商品加到订单",orderDetailIPage);
     }
 
@@ -172,6 +177,7 @@ public class OrderDetailController {
         queryWrapper.eq(OrderDetail::getOid,oid);
         queryWrapper.eq(OrderDetail::getOdstatus,0);
         IPage<OrderDetail> iPage = orderDetailService.page(odpage,queryWrapper);
+        tableService.getById(tnum).setTstatus(true);
         return Result.success(200,"该订单商品有",iPage);
     }
 

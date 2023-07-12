@@ -7,6 +7,7 @@ import com.sun.org.apache.xpath.internal.operations.Or;
 import com.wuyanzu.diancan.entity.Orders;
 import com.wuyanzu.diancan.service.OrderDetailService;
 import com.wuyanzu.diancan.service.OrdersService;
+import com.wuyanzu.diancan.service.TableService;
 import com.wuyanzu.diancan.utils.Result;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +28,9 @@ public class OrdersController {
     @Autowired
     private OrderDetailService orderDetailService;
 
-//    @ApiOperation("订单生成")
-//    @PostMapping("/save")
-//    public Result newOrder(@RequestBody Orders orders, HttpSession session){
-//        log.info("订单数据：{}", orders);
-//        //order.setUid((Long) session.getAttribute("uid"));
-//        orders.setOstatus(0);
-//        ordersService.save(orders);
-//        return Result.success(200,"开始下单", orders);
-//    }
+    @Autowired
+    private TableService tableService;
+
 
     @ApiOperation("订单生成")
     @PostMapping("/save")
@@ -123,6 +118,9 @@ public class OrdersController {
             log.info((String) session.getAttribute("uid"));
             log.info(oid.toString());
             orderDetailService.setAllOdOne(oid);
+        }
+        if (ostatus==4||ostatus==5){
+            tableService.getById(tnum).setTstatus(true);
         }
         ordersService.updateById(orders);
         return Result.success(200,"状态已变更", orders);
