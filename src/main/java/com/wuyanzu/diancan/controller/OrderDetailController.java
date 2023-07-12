@@ -57,25 +57,14 @@ public class OrderDetailController {
             orderDetail.setOdimage(odimage);
             orderDetailService.save(orderDetail);
         }else{                                                                      // 如果不存在 则正常添加
-//            if(orderDetail1.getTaste()==orderDetail.getTaste()){
-//                Integer count = orderDetail1.getOdcount();
-//                orderDetail1.setOdcount(count + 1);
-//                orderDetail1.setOdprice(fprice * (count + 1));
-//                orderDetail1.setOid(oid);
-//                orderDetailService.updateById(orderDetail1);
-//            }else{
-//                orderDetail.setOdcount(1);
-//                orderDetail.setOid(oid);
-//                orderDetail1.setOdprice(fprice);
-//                orderDetail.setOdimage(odimage);
-//                orderDetailService.save(orderDetail);
-//            }
             Integer count = orderDetail1.getOdcount();
             orderDetail1.setOdcount(count + 1);
             orderDetail1.setOdprice(fprice * (count + 1));
             orderDetail1.setOid(oid);
             orderDetailService.updateById(orderDetail1);
         }
+        double sumPrice = orderDetailService.sumPrice(oid);
+        orders.setOprice(sumPrice);
         IPage<OrderDetail> orderDetailIPage = (IPage<OrderDetail>) getOd(tnum).getData();
         return Result.success(200,"商品加到订单",orderDetailIPage);
     }
@@ -98,6 +87,7 @@ public class OrderDetailController {
     public Result remove(@RequestParam Long odid,Integer tnum){
         log.info(odid.toString());
         OrderDetail orderDetail = orderDetailService.getById(odid);
+        Orders orders = ordersService.getById(orderDetail.getOid());
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();              // 查询当前菜品是否在订单中，未上菜状态
         queryWrapper.eq(OrderDetail::getOid,orderDetail.getOid());
         queryWrapper.eq(OrderDetail::getOdname,orderDetail.getOdname());
@@ -116,6 +106,8 @@ public class OrderDetailController {
             orderDetailService.updateById(orderDetail1);
         }
         IPage<OrderDetail> orderDetailIPage = (IPage<OrderDetail>) getOd(tnum).getData();
+        double sumPrice = orderDetailService.sumPrice(orders.getOid());
+        orders.setOprice(sumPrice);
         return Result.success(200,"商品已减少",orderDetailIPage);
     }
 
