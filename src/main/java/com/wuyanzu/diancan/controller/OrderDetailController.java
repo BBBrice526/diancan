@@ -154,9 +154,7 @@ public class OrderDetailController {
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OrderDetail::getOid,oid);
         queryWrapper.ne(OrderDetail::getOdstatus,0)
-                .ne(OrderDetail::getOdstatus,3)
-                .ne(OrderDetail::getOdstatus,4)
-                .ne(OrderDetail::getOdstatus,5);
+                .ne(OrderDetail::getOdstatus,3);
         IPage<OrderDetail> iPage = orderDetailService.page(odpage,queryWrapper);
         return Result.success(200,"该订单商品有",iPage);
     }

@@ -65,7 +65,7 @@ public class OrdersController {
         queryWrapper.ne(Orders::getOstatus,3)
                 .ne(Orders::getOstatus,4)
                 .ne(Orders::getOstatus,5);
-        Orders orders1 = ordersService.getById(queryWrapper);
+        Orders orders1 = ordersService.getOne(queryWrapper);
         return Result.success(200,"", orders1);
     }
 
@@ -120,11 +120,21 @@ public class OrdersController {
             orders.setOprice(orderDetailService.sumPrice(oid));
             orders.setCreateTime(timestamp);
             orders.setUid((Long) session.getAttribute("uid"));
+            log.info((String) session.getAttribute("uid"));
+            log.info(oid.toString());
             orderDetailService.setAllOdOne(oid);
         }
         ordersService.updateById(orders);
         return Result.success(200,"状态已变更", orders);
     }
+
+//    @ApiOperation("测试")
+//    @GetMapping("/testallone")
+//    public String setAllOne(@RequestParam Long oid){
+//        String msg = orderDetailService.setAllOdOne(oid);
+//        return msg;
+//    }
+
 
     @ApiOperation("根据订单号查询订单")
     @GetMapping("/oid")

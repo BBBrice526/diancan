@@ -6,18 +6,24 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wuyanzu.diancan.entity.OrderDetail;
 import com.wuyanzu.diancan.mapper.OrderDetailMapper;
 import com.wuyanzu.diancan.service.OrderDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
 public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, OrderDetail> implements OrderDetailService {
+    @Autowired
+    private OrderDetailMapper orderDetailMapper;
 
     public String setAllOdOne(Long oid){
         UpdateWrapper<OrderDetail> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("oid",oid)
-                .eq("odstatus",0)
-                .set("odstatus",1);
+        updateWrapper.lambda()
+                .eq(OrderDetail::getOid,oid)
+                .eq(OrderDetail::getOdstatus,0);
+        updateWrapper.lambda()
+                .set(OrderDetail::getOdstatus,1);
+        orderDetailMapper.update(null,updateWrapper);
         return "修改订单商品成功";
     }
 
