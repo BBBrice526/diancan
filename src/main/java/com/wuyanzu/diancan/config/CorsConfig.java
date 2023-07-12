@@ -26,9 +26,9 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
         registry.addResourceHandler("/food/**")
-                .addResourceLocations("file:" + System.getProperty("user.dir")+"\\src\\main\\resources\\files\\");
-//        registry.addResourceHandler("/food/**")
-//                .addResourceLocations("file:/www/wwwroot/files");
+                .addResourceLocations("file:" + System.getProperty("user.dir")+"/src/main/resources/files/");
+        registry.addResourceHandler("123.60.174.122:8090/food/**")
+                .addResourceLocations("file:/www/wwwroot/jar/src/main/resources/files");
 //        .addResourceLocations("file:///"+System.getProperty("user.dir")+"/src/main/resources/files/");
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }

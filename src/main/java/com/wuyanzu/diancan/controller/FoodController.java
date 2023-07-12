@@ -43,7 +43,8 @@ public class FoodController {
 
 //    private String path = "C:/Users/BricePC/Desktop/diancan/src/main/resources/static/image";
 
-    private String ip="10.132.5.219";
+//    private String ip="10.132.5.219";
+    private String ip="123.60.174.122";
 
     @Value("${server.port}")
     private String port;
