@@ -30,7 +30,6 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
     public double sumPrice(Long oid){
         QueryWrapper<OrderDetail> queryWrapper = new QueryWrapper<OrderDetail>();
         queryWrapper.eq("oid",oid);
-        queryWrapper.ne("odstatus",2);
         queryWrapper.select("IFNULL(sum(odprice),0) AS sumprice");
         Map<String, Object> map = getMap(queryWrapper);
         return Double.parseDouble(String.valueOf(map.get("sumprice")));
