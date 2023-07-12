@@ -119,6 +119,7 @@ public class OrderDetailController {
         return Result.success(200,"商品已减少",orderDetailIPage);
     }
 
+
     @ApiOperation("商品状态变更")
     @PostMapping("/update")
     public Result updateOd(Long odid, Integer odstatus){
@@ -182,6 +183,13 @@ public class OrderDetailController {
         queryWrapper.eq(OrderDetail::getOdstatus,0);
         IPage<OrderDetail> iPage = orderDetailService.page(odpage,queryWrapper);
         return Result.success(200,"该订单商品有",iPage);
+    }
+
+    @ApiOperation("未完成商品总价")
+    @GetMapping("/getodsum")
+    public Result getOdSumPrice(Long oid){
+        double sumPrice = orderDetailService.sumPrice(oid);
+        return Result.success(200,"",sumPrice);
     }
 
 }

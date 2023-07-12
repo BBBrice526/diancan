@@ -105,14 +105,19 @@ public class OrdersController {
 
     @ApiOperation("变更订单状态")
     @PostMapping("/status")
-    public Result orderStatusUpdate(@RequestParam Long oid,@RequestParam Integer ostatus,HttpSession session){
+    public Result orderStatusUpdate(@RequestParam Integer tnum,@RequestParam Integer ostatus,HttpSession session){
         //log.info(String.valueOf(ostatus),oid.toString());
-        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Orders::getOid,oid);
+        LambdaQueryWrapper<Orders> queryWrapper =new LambdaQueryWrapper<>();
+        queryWrapper.eq(Orders::getTnum,tnum);
+        queryWrapper.ne(Orders::getOstatus,3);
+        queryWrapper.ne(Orders::getOstatus,4);
+        queryWrapper.ne(Orders::getOstatus,5);
         Orders orders = ordersService.getOne(queryWrapper);
+        Long oid = orders.getOid();
         orders.setOstatus(ostatus);
         if(ostatus == 1){
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            orders.setOprice(orderDetailService.sumPrice(oid));
             orders.setCreateTime(timestamp);
             orders.setUid((Long) session.getAttribute("uid"));
             orderDetailService.setAllOdOne(oid);
