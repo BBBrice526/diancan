@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wuyanzu.diancan.entity.OrderDetail;
 import com.wuyanzu.diancan.entity.Orders;
+import com.wuyanzu.diancan.entity.Tables;
 import com.wuyanzu.diancan.service.FoodService;
 import com.wuyanzu.diancan.service.OrderDetailService;
 import com.wuyanzu.diancan.service.OrdersService;
@@ -70,7 +71,9 @@ public class OrderDetailController {
         double sumPrice = orderDetailService.sumPrice(oid);
         orders.setOprice(sumPrice);
         IPage<OrderDetail> orderDetailIPage = (IPage<OrderDetail>) getOd(tnum).getData();
-        tableService.getById(tnum).setTstatus(true);
+        Tables tables = tableService.getById(tnum);
+        tables.setTstatus(true);
+        tableService.updateById(tables);
         return Result.success(200,"商品加到订单",orderDetailIPage);
     }
 
@@ -172,12 +175,14 @@ public class OrderDetailController {
             return Result.error(201,"当前桌子无准备中订单");
         }
         Long oid = orders.getOid();
-        log.info(oid.toString());
+//        log.info(oid.toString());
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OrderDetail::getOid,oid);
         queryWrapper.eq(OrderDetail::getOdstatus,0);
         IPage<OrderDetail> iPage = orderDetailService.page(odpage,queryWrapper);
-        tableService.getById(tnum).setTstatus(true);
+        Tables tables = tableService.getById(tnum);
+        tables.setTstatus(true);
+        tableService.updateById(tables);
         return Result.success(200,"该订单商品有",iPage);
     }
 

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sun.org.apache.xpath.internal.operations.Or;
 import com.wuyanzu.diancan.entity.Orders;
+import com.wuyanzu.diancan.entity.Tables;
 import com.wuyanzu.diancan.service.OrderDetailService;
 import com.wuyanzu.diancan.service.OrdersService;
 import com.wuyanzu.diancan.service.TableService;
@@ -101,7 +102,7 @@ public class OrdersController {
     @ApiOperation("变更订单状态")
     @PostMapping("/status")
     public Result orderStatusUpdate(@RequestParam Integer tnum,@RequestParam Integer ostatus,HttpSession session){
-        //log.info(String.valueOf(ostatus),oid.toString());
+//        log.info(String.valueOf(ostatus));
         LambdaQueryWrapper<Orders> queryWrapper =new LambdaQueryWrapper<>();
         queryWrapper.eq(Orders::getTnum,tnum);
         queryWrapper.ne(Orders::getOstatus,3);
@@ -115,12 +116,15 @@ public class OrdersController {
             orders.setOprice(orderDetailService.sumPrice(oid));
             orders.setCreateTime(timestamp);
             orders.setUid((Long) session.getAttribute("uid"));
-            log.info((String) session.getAttribute("uid"));
-            log.info(oid.toString());
+//            log.info((String) session.getAttribute("uid"));
+//            log.info(oid.toString());
             orderDetailService.setAllOdOne(oid);
         }
         if (ostatus==4||ostatus==5){
-            tableService.getById(tnum).setTstatus(true);
+            Tables tables = tableService.getById(tnum);
+            tables.setTstatus(false);
+            log.info(tables.getTstatus().toString());
+            tableService.updateById(tables);
         }
         ordersService.updateById(orders);
         return Result.success(200,"状态已变更", orders);
